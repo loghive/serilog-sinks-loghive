@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+	  <ImplicitUsings>disable</ImplicitUsings>
+	  <VersionPrefix>1.0.0</VersionPrefix>
+    <Nullable>enable</Nullable>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <Description>
+		  This C# library is a sink for the Serilog Logging Framework. With this extension, all log events that occur are automatically transmitted to the event and log service LogHive. LogHive is a log and events service specially designed for software applications such as apps, websites or services. With LogHive, push notifications can be sent to the web browser or to a mobile device, or the log messages can be analyzed in a separate dashboard.
+	  </Description>
+	  <RepositoryUrl>https://github.com/loghive/serilog-sinks-loghive</RepositoryUrl>
+	  <PackageProjectUrl>https://www.loghive.app</PackageProjectUrl>
+	  <PackageIcon>serilog-sink-nuget.png</PackageIcon>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageTags>event-tracking;log-management;log-tracking;log-interface;log-dashboard;error-logs;</PackageTags>
+	  <Title>This C# library is a sink for the Serilog Logging Framework. With this extension, all log events that occur are automatically transmitted to the event and log service LogHive.</Title>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
+<ItemGroup>
+    <PackageReference Include="LogHive" Version="1.1.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="serilog-sink-nuget.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
+</Project>
