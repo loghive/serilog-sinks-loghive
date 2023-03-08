@@ -1,10 +1,11 @@
 ﻿using LogHive.SDK.CSharp;
+using Newtonsoft.Json;
 using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Serilog.Sinks.LogHive
@@ -51,8 +52,6 @@ namespace Serilog.Sinks.LogHive
             _logger = new LogHiveApi(_options.ApiKey ?? "", _options.Url ?? logHiveUrl);
         }
 
-        private const string exceptionDelimiter = "----- Message -----";
-        private const string exceptionStackTrace = "----- StackTrace -----";
         private const int maxStackTraceDepth = 5;
 
         public void Emit(LogEvent logEvent)
@@ -63,31 +62,51 @@ namespace Serilog.Sinks.LogHive
                 {
                     _ = Task.Run(() =>
                     {
-                        var message = logEvent.RenderMessage();
-                        var exceptionString = new StringBuilder();
+                        var eventname = string.Empty;
+                        var properties = new Dictionary<string, object>();
+
+                        _options.ParseMessageTemplateForEventName ??= false;
+
+                        //var exceptionString = new StringBuilder();
 
                         if (logEvent.Exception != null)
                         {
-                            var counter = 0;
+                            var counter = 1;
                             var nestedException = logEvent.Exception;
+                            properties.Add($"EventName", logEvent.RenderMessage());
+                            properties.Add($"MessageTemplate", logEvent.MessageTemplate.Text);
+                            properties.Add($"TemplateProperties", logEvent.Properties);
+                            properties.Add($"Timstamp", logEvent.Timestamp);
                             do
                             {
-                                exceptionString.AppendLine(exceptionDelimiter);
-                                exceptionString.AppendLine(logEvent.Exception.Message);
+                                properties.Add($"message{counter}", logEvent.Exception.Message);
                                 if (nestedException.StackTrace != null)
                                 {
-                                    exceptionString.AppendLine(exceptionStackTrace).AppendLine(nestedException.StackTrace);
+                                    properties.Add($"stacktrace{counter}", nestedException.StackTrace);
                                 }
                                 nestedException = nestedException.InnerException;
+
                                 counter++;
                             }
                             while (nestedException != null && counter < maxStackTraceDepth);
 
-                            var response = _logger.AddEventAsync(_options.ProjectName ?? "", _options.GroupName ?? "", message, exceptionString.ToString(), logEvent.Level >= _options.MinimumPushNotificationLevel);
+                            var response = _logger.AddEventAsync(_options.ProjectName ?? "", _options.GroupName ?? "", "Exception", JsonConvert.SerializeObject(properties), logEvent.Level >= _options.MinimumPushNotificationLevel);
                         }
                         else
                         {
-                            var response = _logger.AddEventAsync(_options.ProjectName ?? "", _options.GroupName ?? "", message, "", logEvent.Level >= _options.MinimumPushNotificationLevel);
+                            if (!(bool)_options.ParseMessageTemplateForEventName)
+                            {
+                                eventname = logEvent.MessageTemplate.Text;
+                            }
+                            else
+                            {
+                                eventname = logEvent.RenderMessage();
+                            }
+                            properties.Add($"MessageTemplate", logEvent.MessageTemplate.Text);
+                            properties.Add($"TemplateProperties", logEvent.Properties);
+                            properties.Add($"Timstamp", logEvent.Timestamp);
+
+                            var response = _logger.AddEventAsync(_options.ProjectName ?? "", _options.GroupName ?? "", eventname, properties.Count > 0 ? JsonConvert.SerializeObject(properties) : "", logEvent.Level >= _options.MinimumPushNotificationLevel);
                         }
                     });
                 }
@@ -106,6 +125,7 @@ namespace Serilog.Sinks.LogHive
                   string apiKey,
                   string projectName,
                   string groupName,
+                  bool parseMessageTemplateForEventName = false,
                   LogEventLevel restrictedToMinimumLevel = LogEventLevel.Error,
                   LogEventLevel minimumPushNotificationLevel = LogEventLevel.Error,
                   string url = "")
@@ -116,6 +136,7 @@ namespace Serilog.Sinks.LogHive
                 ProjectName = projectName,
                 GroupName = groupName,
                 Url = url,
+                ParseMessageTemplateForEventName = parseMessageTemplateForEventName,
                 RestrictedToMinimumLevel = restrictedToMinimumLevel,
                 MinimumPushNotificationLevel = minimumPushNotificationLevel,
             };

@@ -39,6 +39,7 @@ To ensure that the Serilog extension is found, you should include the namespace 
           "ApiKey": "your-api-key",
           "ProjectName": "yourprojectname",
           "GroupName": "yourgroupname",
+          "ParseMessageTemplateForEventName": false,
           "RestrictedToMinimumLevel": "Error",
           "MinimumPushNotificationLevel": "Error"
         }
@@ -49,6 +50,7 @@ To ensure that the Serilog extension is found, you should include the namespace 
 ApiKey: your personal api key
 ProjectName: your LogHive project name
 GroupName: a group name for the events (e.g. bugs)
+ParseMessageTemplateForEventName: parse message template to full string without property placeholders (default: false)
 RestrictedToMinimumLevel: minimum Log Level to push the event to LogHive
 MinimumPushNotificationLevel: minimum Log Level to push a notification
 

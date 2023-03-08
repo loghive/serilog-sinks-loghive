@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LogHive.Sinks.Serilog\Serilog.Sinks.LogHive.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -9,6 +9,7 @@ namespace Serilog.Sinks.LogHive
         public string? ProjectName = String.Empty;
         public string? GroupName = String.Empty;
         public string? Url = String.Empty;
+        public bool? ParseMessageTemplateForEventName = true;
         public LogEventLevel? RestrictedToMinimumLevel = LogEventLevel.Error;
         public LogEventLevel? MinimumPushNotificationLevel = LogEventLevel.Error;
     }
