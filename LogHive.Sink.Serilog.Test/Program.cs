@@ -1,12 +1,8 @@
-﻿using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.LogHive;
-
-namespace SimpleSink
+﻿namespace SimpleSink
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var log = new LoggerConfiguration()
                 .MinimumLevel.Information()
