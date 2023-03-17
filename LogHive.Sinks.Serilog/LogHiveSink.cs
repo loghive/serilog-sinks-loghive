@@ -102,6 +102,7 @@ namespace Serilog.Sinks.LogHive
                             {
                                 eventname = logEvent.RenderMessage();
                             }
+                            properties.Add($"EventName", eventname);
                             properties.Add($"MessageTemplate", logEvent.MessageTemplate.Text);
                             properties.Add($"TemplateProperties", logEvent.Properties);
                             properties.Add($"Timstamp", logEvent.Timestamp);
