@@ -11,6 +11,6 @@ namespace Serilog.Sinks.LogHive
         public string? Url = String.Empty;
         public bool? ParseMessageTemplateForEventName = true;
         public LogEventLevel? RestrictedToMinimumLevel = LogEventLevel.Error;
-        public LogEventLevel? MinimumPushNotificationLevel = LogEventLevel.Error;
+        public LogEventLevel? MinimumPushNotificationLevel = LogEventLevel.Fatal;
     }
 }
