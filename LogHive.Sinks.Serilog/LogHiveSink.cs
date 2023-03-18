@@ -128,7 +128,7 @@ namespace Serilog.Sinks.LogHive
                   string groupName,
                   bool parseMessageTemplateForEventName = false,
                   LogEventLevel restrictedToMinimumLevel = LogEventLevel.Error,
-                  LogEventLevel minimumPushNotificationLevel = LogEventLevel.Error,
+                  LogEventLevel minimumPushNotificationLevel = LogEventLevel.Fatal,
                   string url = "")
         {
             var options = new LogHiveSinkOptions()
